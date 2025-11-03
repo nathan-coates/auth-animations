@@ -14,7 +14,7 @@ import ClientSrvIcon from "@assets/clientsrv.svg?component-solid";
 import Actor from "@actors/Actor";
 import Action from "@actors/Action";
 import Browser from "@actors/Browser";
-import Attribute from "@actors/Attribute";
+// import Attribute from "@actors/Attribute";
 import User from "@actors/User";
 import Permissions from "@actors/Permissions";
 import Login from "@actors/Login";
@@ -82,13 +82,12 @@ const Pkce = () => {
         "Accept": "application/json",
         "Content-Type": "application/json",
     };
-
     const apiRequestHtml = generateHighlightedHeaders(apiRequest);
 
     const fakeData = {
         "eventId": 1234567890,
         "eventType": "transaction",
-        "amount": 100.00,
+        "amount": 100.0,
         "currency": "USD",
         "timestamp": "2023-10-01T12:00:00Z",
     };
@@ -97,11 +96,13 @@ const Pkce = () => {
 
     const animationFlow = [
         {
-            description: "Initial State",
+            description:
+                "Initial state — no actions have been taken yet. The client, browser, and IDP are idle; no codes, verifiers, or tokens exist.",
             run: [],
         },
         {
-            description: "User initiates login on Client Application",
+            description:
+                "User clicks 'Login' in the Client Application, starting the authorization flow. The browser prepares to navigate to the IDP for user authentication and consent.",
             run: [
                 {
                     fn: setShowElement,
@@ -116,20 +117,23 @@ const Pkce = () => {
             ],
         },
         {
-            description: "Client Application creates Code Verifier",
+            description:
+                "Client generates a high-entropy Code Verifier (a random secret string) locally. This verifier is kept private in the client and will be used later to prove the requester's origin.",
             run: [],
         },
         {
             description:
-                "Client Application creates Code Challenge from Code Verifier",
+                "Client derives a Code Challenge from the Code Verifier (for example, SHA-256 + base64-url). The challenge is safe to send to the IDP and binds the eventual token exchange to this client.",
             run: [],
         },
         {
-            description: "Client Application generates a random State value",
+            description:
+                "Client generates a random State parameter to correlate request and response and to mitigate CSRF. State will be validated when the authorization response returns.",
             run: [],
         },
         {
-            description: "Client Application creates Authorization Request",
+            description:
+                "Client constructs the Authorization Request (response_type=code, client_id, redirect_uri, state, code_challenge, code_challenge_method) and navigates the user's browser to the IDP's authorization endpoint.",
             run: [
                 {
                     fn: addClientId,
@@ -159,7 +163,8 @@ const Pkce = () => {
             ],
         },
         {
-            description: "User authorizes request at IDP",
+            description:
+                "User authenticates at the IDP and is presented with a consent/permission prompt. When the user approves, the IDP proceeds to issue an authorization code.",
             run: [
                 {
                     fn: setShowElement,
@@ -175,12 +180,12 @@ const Pkce = () => {
         },
         {
             description:
-                "IDP generates Authorization Code and stores code challenge",
+                "IDP generates an Authorization Code and securely stores the associated Code Challenge and request metadata for later verification.",
             run: [],
         },
         {
             description:
-                "IDP creates Authorization Response with Authorization Code",
+                "IDP redirects the user's browser back to the Client's redirect URI with the Authorization Code and the State parameter in the query string.",
             run: [
                 {
                     fn: addCode,
@@ -196,7 +201,7 @@ const Pkce = () => {
         },
         {
             description:
-                "Client Application sends Authorization Code and Code Verifier to IDP to exchange for tokens",
+                "Client receives the Authorization Code and constructs a token request to the IDP token endpoint, including the Authorization Code and the original Code Verifier.",
             run: [
                 {
                     fn: addCode,
@@ -222,11 +227,12 @@ const Pkce = () => {
         },
         {
             description:
-                "IDP validates Code Verifier against stored Code Challenge",
+                "IDP validates that the provided Code Verifier matches the previously stored Code Challenge (e.g., by recomputing challenge). If validation succeeds, the exchange is authorized.",
             run: [],
         },
         {
-            description: "IDP issues tokens to Client Application",
+            description:
+                "On successful verification, the IDP issues tokens (access_token, refresh_token, expires_in, token_type, scope) in the token response and returns them to the Client.",
             run: [
                 {
                     fn: addAccessToken,
@@ -252,16 +258,17 @@ const Pkce = () => {
         },
         {
             description:
-                "Client Application uses Access Token to call Resource Server API",
-            run: [],
-        },
-        {
-            description: "Resource Server validates Access Token",
+                "Client includes the Access Token in the Authorization header (Bearer) when calling the Resource Server API to access protected resources.",
             run: [],
         },
         {
             description:
-                "Resource Server returns protected resources to Client Application",
+                "Resource Server validates the Access Token (signature/introspection/claims, expiry, scopes). If valid, it allows access to the requested resource.",
+            run: [],
+        },
+        {
+            description:
+                "Resource Server responds with the requested protected resource (e.g., user data, transaction details) to the Client application.",
             run: [],
         },
     ];
@@ -426,9 +433,9 @@ const Pkce = () => {
                 </Switch>
             </div>
             <div>
-                <p class="mb-4 text-center font-semibold">
+                <div class="mb-8 border rounded-md shadow-md p-4 w-200 text-center font-semibold">
                     {animationFlow[stepState()].description}
-                </p>
+                </div>
             </div>
             <div class="flex gap-4">
                 <div class="flex gap-4">
