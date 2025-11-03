@@ -1,0 +1,28 @@
+{
+    "name": "auth-animations",
+    "version": "0.0.0",
+    "description": "",
+    "type": "module",
+    "scripts": {
+        "start": "vite",
+        "dev": "vite",
+        "build": "vite build",
+        "serve": "vite preview",
+        "fmt": "deno fmt --indent-width=4"
+    },
+    "license": "MIT",
+    "devDependencies": {
+        "@tailwindcss/vite": "^4.1.13",
+        "postcss": "^8.5.6",
+        "solid-devtools": "^0.34.3",
+        "tailwindcss": "^4.1.13",
+        "typescript": "^5.9.2",
+        "vite": "^7.1.4",
+        "vite-plugin-solid": "^2.11.8"
+    },
+    "dependencies": {
+        "@solidjs/router": "^0.15.3",
+        "solid-js": "^1.9.9",
+        "vite-plugin-solid-svg": "^0.8.1"
+    }
+}
