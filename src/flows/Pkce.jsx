@@ -7,15 +7,13 @@ import { createStore } from "solid-js/store";
 import IDPShieldIcon from "@assets/idpshield.svg?component-solid";
 import RSDataIcon from "@assets/rsdata.svg?component-solid";
 import ClientSrvIcon from "@assets/clientsrv.svg?component-solid";
-// import ResourcesIcon from "@assets/resources.svg?component-solid";
-// import RegUsersIcon from "@assets/users.svg?component-solid";
+import UserIcon from "@assets/user.svg?component-solid";
 
 // actors
 import Actor from "@actors/Actor";
 import Action from "@actors/Action";
 import Browser from "@actors/Browser";
-// import Attribute from "@actors/Attribute";
-import User from "@actors/User";
+import LightActor from "@actors/LightActor";
 import Permissions from "@actors/Permissions";
 import Login from "@actors/Login";
 import Payload from "@actors/Payload";
@@ -322,8 +320,8 @@ const Pkce = () => {
             <div class="flex w-full h-150 justify-center items-center mb-8">
                 <Switch>
                     <Match when={stepState() === 1}>
-                        <User />
-                        <Action text={"Interacts with"} />
+                        <LightActor title="User" svg={<UserIcon />} />
+                        <Action text={"Interacts with"} direction={0} />
                         <Browser>
                             <Login />
                             <Show when={showElement()}>
@@ -353,26 +351,29 @@ const Pkce = () => {
                         </Actor>
                     </Match>
                     <Match when={stepState() === 5}>
-                        <Actor
+                        <LightActor
                             title="Client Application"
                             svg={<ClientSrvIcon />}
                         />
-                        <Action text={"Navigates to"} />
+                        <Action text={"Navigates to"} direction={0} />
                         <Actor title="Request" payload>
                             <Payload text={authRequestHtml()} />
                         </Actor>
                     </Match>
                     <Match when={stepState() === 6}>
-                        <Actor title="IDP" svg={<IDPShieldIcon />} />
-                        <Action text={"Redirects browser for Authorization"} />
+                        <LightActor title="IDP" svg={<IDPShieldIcon />} />
+                        <Action
+                            text={"Redirects browser for Authorization"}
+                            direction={0}
+                        />
                         <Browser>
                             <Permissions />
                             <Show when={showElement()}>
                                 <Mouse psX={475} psY={490} />
                             </Show>
                         </Browser>
-                        <Action text={"authorizes"} reversed />
-                        <User />
+                        <Action text={"authorizes"} direction={1} />
+                        <LightActor title="User" svg={<UserIcon />} />
                     </Match>
                     <Match when={stepState() === 7}>
                         <Actor title="IDP" svg={<IDPShieldIcon />}>
@@ -380,18 +381,18 @@ const Pkce = () => {
                         </Actor>
                     </Match>
                     <Match when={stepState() === 8}>
-                        <Actor title="IDP" svg={<IDPShieldIcon />} />
-                        <Action text={"Sends"} />
+                        <LightActor title="IDP" svg={<IDPShieldIcon />} />
+                        <Action text={"Sends"} direction={0} />
                         <Actor title="Code Response" payload>
                             <Payload text={codeResponseHtml()} />
                         </Actor>
                     </Match>
                     <Match when={stepState() === 9}>
-                        <Actor
+                        <LightActor
                             title="Client Application"
                             svg={<ClientSrvIcon />}
                         />
-                        <Action text={"Sends"} />
+                        <Action text={"Sends"} direction={0} />
                         <Actor title="Code Exchange" payload>
                             <Payload text={authCodeExchangeRequestHtml()} />
                         </Actor>
@@ -402,8 +403,8 @@ const Pkce = () => {
                         </Actor>
                     </Match>
                     <Match when={stepState() === 11}>
-                        <Actor title="IDP" svg={<IDPShieldIcon />} />
-                        <Action text={"Sends"} />
+                        <LightActor title="IDP" svg={<IDPShieldIcon />} />
+                        <Action text={"Sends"} direction={0} />
                         <Actor title="Token Response" payload>
                             <Payload text={accessResponseHtml()} />
                         </Actor>
@@ -413,7 +414,7 @@ const Pkce = () => {
                             title="Client Application"
                             svg={<ClientSrvIcon />}
                         />
-                        <Action text={"Sends"} />
+                        <Action text={"Sends"} direction={0} />
                         <Actor title="Request Headers" payload>
                             <Payload text={apiRequestHtml} />
                         </Actor>
@@ -424,8 +425,11 @@ const Pkce = () => {
                         </Actor>
                     </Match>
                     <Match when={stepState() === 14}>
-                        <Actor title="Resource Server" svg={<RSDataIcon />} />
-                        <Action text={"Sends"} />
+                        <LightActor
+                            title="Resource Server"
+                            svg={<RSDataIcon />}
+                        />
+                        <Action text={"Sends"} direction={0} />
                         <Actor title="Protected Resource" payload>
                             <Payload text={fakeDataHtml} />
                         </Actor>

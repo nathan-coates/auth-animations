@@ -60,3 +60,8 @@
     animation: click-animation 500ms ease-in-out 1;
     transform-origin: top left;
 }
+
+.lightactor > svg {
+    height: 96px;
+    width: 96px;
+}

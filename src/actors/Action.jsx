@@ -1,10 +1,12 @@
+import { Match, Switch } from "solid-js";
 import ArrowIcon from "@assets/actionarrow.svg?component-solid";
+import LineIcon from "@assets/actionline.svg?component-solid";
 
 /**
  * @typedef ActionProps
  * @type {object}
  * @property {string} text
- * @property {bool?} reverse
+ * @property {number} direction
  */
 
 /**
@@ -12,21 +14,30 @@ import ArrowIcon from "@assets/actionarrow.svg?component-solid";
  * @returns {JSX.Element}
  */
 const Action = (props) => {
-    const normal = (
-        <div class="flex items-center">
-            <div>{props.text}</div>
-            <ArrowIcon />
+    const actionText = (
+        <div class="max-w-40 italic text-lg text-center">
+            {props.text}
         </div>
     );
 
-    const reversed = (
-        <div class="flex items-center">
-            <ArrowIcon class="rotate-90" />
-            <div>{props.text}</div>
-        </div>
+    return (
+        <Switch>
+            <Match when={props.direction == 0}>
+                <div class="flex items-center mb-6">
+                    <LineIcon />
+                    {actionText()}
+                    <ArrowIcon />
+                </div>
+            </Match>
+            <Match when={props.direction == 1}>
+                <div class="flex items-center">
+                    <ArrowIcon class="rotate-180" />
+                    {actionText()}
+                    <LineIcon />
+                </div>
+            </Match>
+        </Switch>
     );
-
-    return props.reverse ? reversed : normal;
 };
 
 export default Action;
