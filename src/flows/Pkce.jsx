@@ -410,7 +410,7 @@ const Pkce = () => {
                         </Actor>
                     </Match>
                     <Match when={stepState() === 12}>
-                        <Actor
+                        <LightActor
                             title="Client Application"
                             svg={<ClientSrvIcon />}
                         />
